@@ -3,7 +3,7 @@ Starting the server
 With the defaults or explicitly.
 
     mongod
-    mongod --bind_ip localhost --port 27017 --dbpath C":\data\db\
+    mongod --bind_ip localhost --port 27017 --dbpath C:\data\db\
 
 Starting the shell
 ---
