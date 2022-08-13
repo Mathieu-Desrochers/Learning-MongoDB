@@ -86,7 +86,7 @@ New documents are automatically assigned an _id.
 
 Adding multiple documents in bulk.
 
-    db.books.insertMany([ { "Title": 'Book2' }, { "Title": "Book3" }, { "Title": "Book4" } ])
+    db.books.insertMany([ { "Title": "Book2" }, { "Title": "Book3" }, { "Title": "Book4" } ])
 
     {
       acknowledged: true,
