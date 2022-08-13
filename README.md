@@ -330,9 +330,9 @@ Setting a value only on insertion.
         { "$setOnInsert": { "CreatedOn": ISODate() }},
         { "upsert": true })
 
-Return the Updated Documents
+Find and Update
 ---
-Does an atomic find and update.
+Done as an atomic operation.
 
     db.processes.findOneAndUpdate(
         { "Status": "READY" },
