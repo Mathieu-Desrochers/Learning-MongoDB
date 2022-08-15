@@ -332,7 +332,7 @@ Setting a value only on insertion.
 
 Find and Update
 ---
-Done as an atomic operation.
+Makes the operations atomic.
 
     db.processes.findOneAndUpdate(
         { "Status": "READY" },
@@ -366,10 +366,16 @@ Creating indexes.
     db.users.createIndex({ "username": 1 })
     db.users.createIndex({ "username": 1, "age": 1 })
 
-Creating unique indexes.
+Creating unique indexes.  
+Partial when null is allowed.
 
     db.users.createIndex({ "email": 1 }, { "unique": true })
-    db.users.createIndex({ "email": 1 }, { "unique": true, "partialFilterExpression": { "email": { "$exists": true }}})
+    
+    db.users.createIndex({ "email": 1 }, {
+      "unique": true,
+      "partialFilterExpression": {
+        "email": { "$exists": true }
+      }})
 
 Creating indexes on arrays.  
 Each document get one index entry per array item.  
