@@ -180,7 +180,7 @@ Keys must be in the same order.
 
     db.invoices.find({ "Customer": { "Name": "Alice", "Address": "123 Sunny Street" }})
 
-Returned Values
+Projections
 ---
 Returning only a subset of keys.  
 Always includes _id.
@@ -358,3 +358,43 @@ Deleting multiple documents in bulk.
 Dropping a collection.
 
     db.users.drop();
+
+Indexes
+---
+Creating indexes.
+
+    db.users.createIndex({ "username": 1 })
+    db.users.createIndex({ "username": 1, "age": 1 })
+
+Creating unique indexes.
+
+    db.users.createIndex({ "email": 1 }, { "unique": true })
+    db.users.createIndex({ "email": 1 }, { "unique": true, "partialFilterExpression": { "email": { "$exists": true }}})
+
+Creating indexes on arrays.  
+Each document get one index entry per array item.  
+Careful with index size.
+
+    db.users.createIndex({ "addresses.city": 1 })
+
+Listing indexes.
+
+    db.users.getIndexes()
+
+Explaining query plans.
+
+    db.users.find({ "username": "user100" }).explain("executionStats")
+
+Understanding execution stages.
+
+- COLLSCAN: Consider an index
+- IXSCAN: Good job
+- FETCH: Consider a convering index
+- PROJECTION_COVERED: Good job
+- SORT: Consider adding the sort key to the index
+
+Significant indicators.
+
+- nReturned
+- docsExamined
+- executionTimeMillis
