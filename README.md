@@ -77,7 +77,7 @@ Insertions
 Adding documents to a collection.  
 New documents are automatically assigned an _id.
 
-    db.books.insertOne({ "Title": "Book1" })
+    db.books.insertOne({ "title": "Book1" })
 
     {
       acknowledged: true,
@@ -86,7 +86,7 @@ New documents are automatically assigned an _id.
 
 Adding multiple documents in bulk.
 
-    db.books.insertMany([ { "Title": "Book2" }, { "Title": "Book3" }, { "Title": "Book4" } ])
+    db.books.insertMany([ { "title": "Book2" }, { "title": "Book3" }, { "title": "Book4" } ])
 
     {
       acknowledged: true,
@@ -102,44 +102,44 @@ Queries
 Searching for specific values.  
 All values must match.
 
-    db.users.find({ "FirstName": "Alice" })
-    db.users.find({ "FirstName": "Alice", "Occupation": "Pirate" })
+    db.users.find({ "firstName": "Alice" })
+    db.users.find({ "firstName": "Alice", "occupation": "Pirate" })
 
 Using comparaison operators.
 
-    db.users.find({ "Salary": { "$gt": 10 } })
-    db.users.find({ "Salary": { "$gte": 10 } })
-    db.users.find({ "Salary": { "$lt": 50 } })
-    db.users.find({ "Salary": { "$lte": 50 } })
-    db.users.find({ "Salary": { "$eq": 70 } })
-    db.users.find({ "Salary": { "$ne": 70 } })
-    db.users.find({ "Salary": { "$in": [ 10, 50 ] }})
+    db.users.find({ "salary": { "$gt": 10 } })
+    db.users.find({ "salary": { "$gte": 10 } })
+    db.users.find({ "salary": { "$lt": 50 } })
+    db.users.find({ "salary": { "$lte": 50 } })
+    db.users.find({ "salary": { "$eq": 70 } })
+    db.users.find({ "salary": { "$ne": 70 } })
+    db.users.find({ "salary": { "$in": [ 10, 50 ] }})
 
 Using logical operators.
 
-    db.users.find({ "$and": [{ "FirstName": "Alice" }, { "Salary": 10 }]})
-    db.users.find({ "$or": [{ "FirstName": "Alice" }, { "Salary": 10 }]})
-    db.users.find({ "$nor": [{ "FirstName": "Alice" }, { "Salary": 10 }]})
+    db.users.find({ "$and": [{ "firstName": "Alice" }, { "salary": 10 }]})
+    db.users.find({ "$or": [{ "firstName": "Alice" }, { "salary": 10 }]})
+    db.users.find({ "$nor": [{ "firstName": "Alice" }, { "salary": 10 }]})
 
 Negations.
 
-    db.users.find({ "FirstName": { "$not": { "$eq": "Alice" }}})
+    db.users.find({ "firstName": { "$not": { "$eq": "Alice" }}})
 
 Querying for null.  
 Matches null and undefined.
 
-    db.users.find({ "Occupation": null })
-    db.users.find({ "Occupation": { "$eq": null, "$exists": true }})
+    db.users.find({ "occupation": null })
+    db.users.find({ "occupation": { "$eq": null, "$exists": true }})
 
 Regular expressions.
 
-    db.users.find({ "FirstName": { "$regex": /^Alice/ }})
+    db.users.find({ "firstName": { "$regex": /^Alice/ }})
 
 Matching documents by code.  
 Expressive but causes a collection scan.
 
     db.users.find({ "$where": function () {
-        return this.Name != this.Occupation;
+        return this.firstName != this.occupation;
     }})
 
 Queries on Arrays
@@ -147,60 +147,60 @@ Queries on Arrays
 Searching for specific values in arrays.  
 All values must be matched.
 
-    db.users.find({ "Numbers": 5 })
-    db.users.find({ "Numbers": { "$all": [ 5, 10 ]}})
+    db.users.find({ "numbers": 5 })
+    db.users.find({ "numbers": { "$all": [ 5, 10 ]}})
 
 Searching for exact arrays.  
 Items must be in the same order.
 
-    db.users.find({ "Numbers": [ 5, 10 ]})
+    db.users.find({ "numbers": [ 5, 10 ]})
 
 Conditions on arrays.  
 All conditions are matched by one item.
 
-    db.users.find({ "Numbers": { "$gt": 10, "$lt": 20 }})
+    db.users.find({ "numbers": { "$gt": 10, "$lt": 20 }})
 
 All conditions are matched by the same item.
 
-    db.users.find({ "Numbers": { "$elemMatch": { "$gt": 10, "$lt": 20 }}})
+    db.users.find({ "numbers": { "$elemMatch": { "$gt": 10, "$lt": 20 }}})
 
 Querying by the size of an array.
 
-    db.users.find({ "Numbers": { "$size": 3 }})
+    db.users.find({ "numbers": { "$size": 3 }})
 
 Queries on Embedded Documents
 ---
 Searching for specific values in embedded documents.  
 All values must be matched.
 
-    db.invoices.find({ "Customer.Name": "Alice", "Customer.Address": "123 Sunny Street" })
+    db.invoices.find({ "customer.name": "Alice", "customer.address": "123 Sunny Street" })
 
 Searching for exact embedded documents.  
 Keys must be in the same order.
 
-    db.invoices.find({ "Customer": { "Name": "Alice", "Address": "123 Sunny Street" }})
+    db.invoices.find({ "customer": { "name": "Alice", "address": "123 Sunny Street" }})
 
 Projections
 ---
 Returning only a subset of keys.  
 Always includes _id.
 
-    db.users.find({}, { "FirstName": 1, "LastName": 1 })
+    db.users.find({}, { "firstName": 1, "lastName": 1 })
 
 Not returning a subset of keys.  
 Includes the other ones.
 
-    db.users.find({}, { "Password": 0 })
+    db.users.find({}, { "password": 0 })
 
 Returning the subset of an array.
 
-    db.users.find({}, { "Languages": { "$slice": 2 }})
-    db.users.find({}, { "Languages": { "$slice": -3 }})
-    db.users.find({}, { "Languages": { "$slice": [1, 2] }})
+    db.users.find({}, { "languages": { "$slice": 2 }})
+    db.users.find({}, { "languages": { "$slice": -3 }})
+    db.users.find({}, { "languages": { "$slice": [1, 2] }})
 
 Returning the matching item of an array.
 
-    db.users.find({ "Languages" : "French" }, { "Languages.$": 1 })
+    db.users.find({ "languages" : "French" }, { "languages.$": 1 })
 
 Cursors
 ---
@@ -216,7 +216,7 @@ No query is executed before it gets iterated.
 
 Sorting.
 
-    db.users.find({}).sort({ "FirstName": 1, "LastName": -1 })
+    db.users.find({}).sort({ "firstName": 1, "lastName": -1 })
 
 Paginating.
 
@@ -230,31 +230,31 @@ It identifies the updated documents.
 Setting values.  
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$set": { "Occupation": "Ninja", "Invisible": true }})
+        { "firstName": "Alice" },
+        { "$set": { "occupation": "Ninja", "invisible": true }})
 
 Incrementing values.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$inc": { "Salary": 10 }})
+        { "firstName": "Alice" },
+        { "$inc": { "salary": 10 }})
 
 Removing values.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$unset": { "Invisible": 1 }})
+        { "firstName": "Alice" },
+        { "$unset": { "invisible": 1 }})
 
 Updating multiple documents in bulk.
 
     db.users.updateMany(
-        { "Occupation": "Programmer" },
-        { "$inc": { "Salary": 10 }})
+        { "occupation": "Programmer" },
+        { "$inc": { "salary": 10 }})
 
 Updating documents by code.
 
-    let user = db.users.findOne({ "FirstName": "Alice" })
-    user.FirstName = user.FirstName.toUpperCase()
+    let user = db.users.findOne({ "firstName": "Alice" })
+    user.firstName = user.firstName.toUpperCase()
     db.users.replaceOne({ "_id": user._id }, user)
 
 Updates on Arrays
@@ -262,46 +262,46 @@ Updates on Arrays
 Adding a single value.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$push": { "Pets": "Bird" }})
+        { "firstName": "Alice" },
+        { "$push": { "pets": "Bird" }})
 
 Adding multiple value.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$push": { "Pets": { "$each": [ "Cat", "Dog" ]}}})
+        { "firstName": "Alice" },
+        { "$push": { "pets": { "$each": [ "Cat", "Dog" ]}}})
 
 Limiting the array length.  
 Keeps the last three items pushed.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$push": { "Pets": { "$each": [ "Elephant" ], "$slice": -3 }}})
+        { "firstName": "Alice" },
+        { "$push": { "pets": { "$each": [ "Elephant" ], "$slice": -3 }}})
 
 Using arrays as sets.  
 Does not add existing values.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$addToSet": { "Pets": "Fish" }})
+        { "firstName": "Alice" },
+        { "$addToSet": { "pets": "Fish" }})
 
 Updating an array item by index.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$set": { "Pets.0": "Alligator" }})
+        { "firstName": "Alice" },
+        { "$set": { "pets.0": "Alligator" }})
 
 Updating an array item by query match.
 
     db.users.updateOne(
-        { "Pets": "Dog" },
-        { "$set": { "Pets.$": "Wolf" }})
+        { "pets": "Dog" },
+        { "$set": { "pets.$": "Wolf" }})
 
 Updating multiple array items.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$set": { "Pets.$[elem]": "Eagle" }},
+        { "firstName": "Alice" },
+        { "$set": { "pets.$[elem]": "Eagle" }},
         {
           "arrayFilters": [{ "elem": "Bird" }]
         })
@@ -311,23 +311,23 @@ Upserts
 Does an update when a document is matched.
 
     db.users.updateOne(
-        { "FirstName": "Alice" },
-        { "$set": { "Occupation": "Cook" }},
+        { "firstName": "Alice" },
+        { "$set": { "occupation": "Cook" }},
         { "upsert": true })
 
 Otherwise does an insert.  
 Includes the values from the query.
 
     db.users.updateOne(
-        { "FirstName": "Bob" },
-        { "$set": { "Occupation": "Pilot" }},
+        { "firstName": "Bob" },
+        { "$set": { "occupation": "Pilot" }},
         { "upsert": true })
 
 Setting a value only on insertion.
 
     db.users.updateOne(
-        { "FirstName": "Carl" },
-        { "$setOnInsert": { "CreatedOn": ISODate() }},
+        { "firstName": "Carl" },
+        { "$setOnInsert": { "createdOn": ISODate() }},
         { "upsert": true })
 
 Find and Update
@@ -335,25 +335,25 @@ Find and Update
 Makes the operations atomic.
 
     db.processes.findOneAndUpdate(
-        { "Status": "READY" },
-        { "$set": { "Status": "RUNNING" }},
-        { "sort": { "Priority": 1 }, "returnNewDocument": true })
+        { "status": "READY" },
+        { "$set": { "status": "RUNNING" }},
+        { "sort": { "priority": 1 }, "returnNewDocument": true })
 
     {
       _id: ObjectId("62f7ed7be49ee735d296c1e6"),
-      Priority: 1,
-      Status: 'RUNNING'
+      priority: 1,
+      status: 'RUNNING'
     }
 
 Deletions
 ---
 Deleting a document.  
 
-    db.users.deleteOne({ "FirstName": "Alice" })
+    db.users.deleteOne({ "firstName": "Alice" })
 
 Deleting multiple documents in bulk.
 
-    db.users.deleteMany({ "Occupation": "Programmer" })
+    db.users.deleteMany({ "occupation": "Programmer" })
 
 Dropping a collection.
 
@@ -459,19 +459,70 @@ Creating an index.
 
 Querying for multiple keywords.
 
-    db.recipes.find({ $text: { $search: "spiced" } })
-    db.recipes.find({ $text: { $search: "spiced espresso" }});
-    db.recipes.find({ $text: { $search: "espresso -milk" } });
+    db.recipes.find({ "$text": { "$search": "spiced" }})
+    db.recipes.find({ "$text": { "$search": "spiced espresso" }});
+    db.recipes.find({ "$text": { "$search": "espresso -milk" }});
 
 Querying for exact phrases.
 
-    db.recipes.find({ $text: { $search: "\"ice cream\"" }});
+    db.recipes.find({ "$text": { "$search": "\"ice cream\"" }});
 
 Querying relevance.
 
     db.recipes.find(
-      { $text: { $search: "spiced espresso" }},
-      { score: { $meta: "textScore" }})
+      { "$text": { "$search": "spiced espresso" }},
+      { "score": { "$meta": "textScore" }})
 
 Aggregation Framework
 ---
+Building a pipeline.
+
+    db.users.aggregate([
+      { "$match": { "age": { "$gte": 20, "$lte": 30 }}},
+      { "$sort": { "age": 1 }},
+      { "$skip": 10 },
+      { "$limit": 5 },
+      { "$project": { "_id": 0, "username": 1}}
+    ])
+
+Joining.
+
+    db.users.aggregate([
+      { "$lookup":
+        {
+           "from": "profiles",
+           "localField": "_id",
+           "foreignField": "userId",
+           "as": "profile"
+        }
+      }
+    ])
+
+Grouping.
+
+    db.users.aggregate([
+      { "$group": {
+        "_id": { "occupation": "$occupation" },
+        "averageAge": { "$avg": "$age" }
+      }}
+    ])
+
+Unwinding arrays.  
+Duplicates the document for each array item.
+
+    db.users.aggregate([
+      { "$match": { "firstName": "Alice" }},
+      { "$unwind": "$numbers" }
+    ])
+
+    [
+      { _id: ObjectId("62faac6e2d6219e5d234a42c"), firstName: 'Alice', numbers: 1 },
+      { _id: ObjectId("62faac6e2d6219e5d234a42c"), firstName: 'Alice', numbers: 2 },
+      { _id: ObjectId("62faac6e2d6219e5d234a42c"), firstName: 'Alice', numbers: 3 }
+    ]
+
+Saving the results.
+
+    db.users.aggregate([
+      { "$merge": { "into": "results", "on": "_id" }}
+    ])
