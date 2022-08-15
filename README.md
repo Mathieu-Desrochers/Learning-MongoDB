@@ -378,10 +378,15 @@ Partial when null is allowed.
       }})
 
 Creating indexes on arrays.  
-Each document get one index entry per array item.  
+Each document gets one index entry per array item.  
 Careful with index size.
 
     db.users.createIndex({ "addresses.city": 1 })
+
+Time to live indexes.  
+Expired documents automatically get deleted.
+
+    db.logs.createIndex({ "dateTime": 1 }, { "expireAfterSeconds": 24 * 60 * 60 })
 
 Listing indexes.
 
@@ -404,3 +409,69 @@ Significant indicators.
 - nReturned
 - docsExamined
 - executionTimeMillis
+
+Geospatial Queries
+---
+Type of values.  
+
+    { "type": "Point", "coordinates": [1, 2] }
+    { "type": "LineString", "coordinates": [[1, 2], [3, 4], [4, 5]] }
+    { "type": "Polygon", "coordinates": [[1, 2], [3, 4], [4, 5]] }
+
+Creating an index.
+
+    db.neighborhoods.createIndex({ "location": "2dsphere" })
+
+Querying for areas containing a point.
+
+    db.neighborhoods.find({
+      "geometry": {
+        "$geoIntersects": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [-73.93414657, 40.82302903]
+          }
+        }
+      }})
+
+Querying for locations near a point.
+
+    db.restaurants.find({
+      "location": {
+        "$nearSphere": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [-73.93414657, 40.82302903]
+          },
+          "$maxDistance": 8046.7
+        }
+      }})
+
+Full Text Queries
+---
+Creating an index.
+
+    db.recipes.createIndex({ "name": "text" })
+
+    db.recipes.createIndex(
+      { "name": "text", "description": "text" },
+      { "weights": { "name": 3, "description": 2 }})
+
+Querying for multiple keywords.
+
+    db.recipes.find({ $text: { $search: "spiced" } })
+    db.recipes.find({ $text: { $search: "spiced espresso" }});
+    db.recipes.find({ $text: { $search: "espresso -milk" } });
+
+Querying for exact phrases.
+
+    db.recipes.find({ $text: { $search: "\"ice cream\"" }});
+
+Querying relevance.
+
+    db.recipes.find(
+      { $text: { $search: "spiced espresso" }},
+      { score: { $meta: "textScore" }})
+
+Aggregation Framework
+---
