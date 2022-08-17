@@ -526,3 +526,44 @@ Saving the results.
     db.users.aggregate([
       { "$merge": { "into": "results", "on": "_id" }}
     ])
+
+Replica Sets
+---
+Provides failover servers synchronized by log shipping.  
+Starting the servers.
+
+    mongod --bind_ip localhost --port 27017 --replSet replSet1 --dbpath C:\data\rs1\
+    mongod --bind_ip localhost --port 27018 --replSet replSet1 --dbpath C:\data\rs2\
+    mongod --bind_ip localhost --port 27019 --replSet replSet1 --dbpath C:\data\rs3\
+
+Configuring the replica set.
+
+    mongosh --host localhost --port 27017
+
+    let config = {
+        "_id": "replSet1",
+        "members": [
+            { "_id": 0, "host": "localhost:27017", "priority": 2 },
+            { "_id": 1, "host": "localhost:27018" },
+            { "_id": 2, "host": "localhost:27019" }
+        ]
+    }
+
+    rs.initiate(config)
+    rs.status()
+
+Connecting to the replica set.
+
+    mongosh --host replSet1/localhost:27017,localhost:27018,localhost:27019
+
+    db.cars.insertOne({ "color": "red" })
+
+Kill the primary server.  
+A new primary gets elected.
+
+    rs.status()
+
+The replica set is still available.  
+No reconnection is required from the application.
+
+    db.cars.find()
