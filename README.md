@@ -12,36 +12,11 @@ With the defaults or explicitly.
     mongosh
     mongosh --host localhost --port 27017
 
-Javascript
----
 The shell is a complete javascript interpreter.
 
     > let add = (a, b) => a + b;
     > add(1, 2);
     3
-
-Running Scripts
----
-Scripts can be run when starting the shell.
-
-    mongosh migration001.js
-
-Using an External Editor
----
-Setting the editor.
-
-    > config.set("editor", "notepad")
-
-Editing a variable.
-
-    > let document = {}
-    > edit document
-    > document = { "A": 1 }
-
-Editing a statement.
-
-    > edit
-    > db.insertOne()
 
 Databases
 ---
@@ -52,7 +27,7 @@ Switching to a different database.
     switched to db books
     books>
 
-Data Types
+Data types
 ---
 Supported data types.  
 Numbers are float64 by default, be careful.  
@@ -142,7 +117,7 @@ Expressive but causes a collection scan.
         return this.firstName != this.occupation;
     }})
 
-Queries on Arrays
+Queries on arrays
 ---
 Searching for specific values in arrays.  
 All values must be matched.
@@ -168,7 +143,7 @@ Querying by the size of an array.
 
     db.users.find({ "numbers": { "$size": 3 }})
 
-Queries on Embedded Documents
+Queries on embedded documents
 ---
 Searching for specific values in embedded documents.  
 All values must be matched.
@@ -257,7 +232,7 @@ Updating documents by code.
     user.firstName = user.firstName.toUpperCase()
     db.users.replaceOne({ "_id": user._id }, user)
 
-Updates on Arrays
+Updates on arrays
 ---
 Adding a single value.
 
@@ -330,7 +305,7 @@ Setting a value only on insertion.
         { "$setOnInsert": { "createdOn": ISODate() }},
         { "upsert": true })
 
-Find and Update
+Find and update
 ---
 Makes the operations atomic.
 
@@ -410,7 +385,7 @@ Significant indicators.
 - docsExamined
 - executionTimeMillis
 
-Geospatial Queries
+Geospatial queries
 ---
 Type of values.  
 
@@ -447,7 +422,7 @@ Querying for locations near a point.
         }
       }})
 
-Full Text Queries
+Full text queries
 ---
 Creating an index.
 
@@ -473,7 +448,7 @@ Querying relevance.
       { "$text": { "$search": "spiced espresso" }},
       { "score": { "$meta": "textScore" }})
 
-Aggregation Framework
+Aggregation framework
 ---
 Building a pipeline.
 
@@ -527,7 +502,7 @@ Saving the results.
       { "$merge": { "into": "results", "on": "_id" }}
     ])
 
-Replica Sets
+Replica sets
 ---
 Provides failover servers synchronized by log shipping.  
 Starting the servers.
@@ -541,12 +516,12 @@ Configuring the replica set.
     mongosh --host localhost --port 27017
 
     let config = {
-        "_id": "replSet1",
-        "members": [
-            { "_id": 0, "host": "localhost:27017", "priority": 2 },
-            { "_id": 1, "host": "localhost:27018" },
-            { "_id": 2, "host": "localhost:27019" }
-        ]
+      "_id": "replSet1",
+      "members": [
+        { "_id": 0, "host": "localhost:27017", "priority": 2 },
+        { "_id": 1, "host": "localhost:27018" },
+        { "_id": 2, "host": "localhost:27019" }
+      ]
     }
 
     rs.initiate(config)
@@ -567,3 +542,49 @@ The replica set is still available.
 No reconnection is required from the application.
 
     db.cars.find()
+
+Sharding
+---
+Spreads data accross multiple servers.  
+Starting the configuration server.
+
+    mongod --bind_ip localhost --port 27017 --replSet config --configsvr --dbpath C:\data\config\
+    mongosh localhost:27017
+    
+    rs.initiate()
+
+Starting the router.
+
+    mongos --bind_ip localhost --port 27018 --configdb config/localhost:27017
+
+Starting the shard servers.
+
+    mongod --bind_ip localhost --port 27019 --replSet shard1 --shardsvr --dbpath C:\data\shard1\
+    mongosh localhost:27019
+    
+    rs.initiate()
+
+    mongod --bind_ip localhost --port 27020 --replSet shard2 --shardsvr --dbpath C:\data\shard2\
+    mongosh localhost:27020
+
+    rs.initiate()
+
+Adding the shard servers.
+
+    mongosh localhost:27018
+
+    sh.addShard("shard1/localhost:27019")
+    sh.addShard("shard2/localhost:27020")
+    sh.status()
+
+Sharding a collection.
+
+    mongosh localhost:27018
+
+    sh.shardCollection("test.cities", { "index": "hashed" })
+
+    for (var i = 0; i < 100; i++) {
+        db.cities.insertOne({ "index": i, "name": "city" + i })
+    }
+
+    db.cities.getShardDistribution()
