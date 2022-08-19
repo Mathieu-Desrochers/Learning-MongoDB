@@ -502,6 +502,25 @@ Saving the results.
       { "$merge": { "into": "results", "on": "_id" }}
     ])
 
+Security
+---
+Creating a user.
+
+    mongosh
+
+    use admin
+    db.createUser({
+      user: "mathieu",
+      pwd: passwordPrompt(),
+      roles: [ "root" ]
+    })
+
+Shutdown mongod and mongosh.  
+Connecting as a user.
+
+    mongod --auth
+    mongosh --authenticationDatabase "admin" -u "mathieu" -p
+
 Replica sets
 ---
 Provides failover servers synchronized by log shipping.  
@@ -588,3 +607,26 @@ Sharding a collection.
     }
 
     db.cities.getShardDistribution()
+
+Profiling
+---
+Querying the current operations.
+
+    db.currentOp()
+
+Using the profiler.
+
+    db.setProfilingLevel(2)
+
+    db.keyboards.insert({ "color": "black", "noisy": true })
+    db.keyboards.findOne({ "noisy": true })
+    db.keyboards.deleteOne({})
+
+    db.system.profile.find()
+
+    db.setProfilingLevel(0)
+
+Per collection and global statistics.
+
+    mongotop
+    mongostat
