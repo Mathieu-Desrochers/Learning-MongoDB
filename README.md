@@ -626,7 +626,7 @@ Running a transaction.
       "writeConcern": { "w": "majority" }
     })
 
-    // Not visible outside the transaction.
+    // Changes are not visible outside the transaction.
     session.getDatabase("test").getCollection("widgets").insertOne({
       "color": "red"
     })
@@ -634,7 +634,7 @@ Running a transaction.
     // Outside changes are not visible after first read.
     session.getDatabase("test").getCollection("widgets").find()
 
-    // Outside changes on read documents cause concurrency errors.
+    // Outside changes on a read document cause a concurrency error.
     session.getDatabase("test").getCollection("widgets").updateMany({}, {
       "$set": { "color": "blue" }
     })
