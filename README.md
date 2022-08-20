@@ -158,7 +158,7 @@ Keys must be in the same order.
 Projections
 ---
 Returning only a subset of keys.  
-Always includes _id.
+Includes _id by default.
 
     db.users.find({}, { "firstName": 1, "lastName": 1 })
 
