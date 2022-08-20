@@ -523,7 +523,7 @@ Connecting as a user.
 
 Replica sets
 ---
-Provides failover servers synchronized by log shipping.  
+Provides failover servers synchronized by operation log replay.  
 Starting the servers.
 
     mongod --bind_ip localhost --port 27017 --replSet replSet1 --dbpath C:\data\rs1\
@@ -607,6 +607,51 @@ Sharding a collection.
     }
 
     db.cities.getShardDistribution()
+
+Transactions
+---
+Requires a replica set.
+
+    mongod --replSet replSet1 --dbpath C:\data\tx\
+    mongosh
+
+    rs.initiate()
+
+Running a transaction.
+
+    let session = db.getMongo().startSession()
+
+    session.startTransaction({
+      "readConcern": { "level": "snapshot" },
+      "writeConcern": { "w": "majority" }
+    })
+
+    // Not visible outside the transaction.
+    session.getDatabase("test").getCollection("widgets").insertOne({
+      "color": "red"
+    })
+
+    // Outside changes are not visible after first read.
+    session.getDatabase("test").getCollection("widgets").find()
+
+    // Outside changes on read documents cause concurrency errors.
+    session.getDatabase("test").getCollection("widgets").updateMany({}, {
+      "$set": { "color": "blue" }
+    })
+
+    session.commitTransaction()
+
+Backups
+---
+Making a backup.
+
+    mongodump
+    mongodump -d test
+    mongodump -d test -c users
+
+Restoring a backup.
+
+    mongorestore dump/
 
 Profiling
 ---
