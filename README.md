@@ -617,7 +617,8 @@ Requires a replica set.
 
     rs.initiate()
 
-Running a transaction.
+Running a transaction.  
+Provides the snapshot isolation level.
 
     let session = db.getMongo().startSession()
 
@@ -626,18 +627,8 @@ Running a transaction.
       "writeConcern": { "w": "majority" }
     })
 
-    // Changes are not visible outside the transaction.
-    session.getDatabase("test").getCollection("widgets").insertOne({
-      "color": "red"
-    })
-
-    // Outside changes are not visible after first read.
-    session.getDatabase("test").getCollection("widgets").find()
-
-    // Outside changes on a read document cause a concurrency error.
-    session.getDatabase("test").getCollection("widgets").updateMany({}, {
-      "$set": { "color": "blue" }
-    })
+    session.getDatabase("test").getCollection("widgets").insertOne({ "color": "red" })
+    session.getDatabase("test").getCollection("dogs").insertOne({ "hair": "fluffy" })
 
     session.commitTransaction()
 
