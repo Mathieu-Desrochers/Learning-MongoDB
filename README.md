@@ -608,6 +608,41 @@ Sharding a collection.
 
     db.cities.getShardDistribution()
 
+Schemas
+---
+Applying a json schema.
+
+    db.runCommand({
+      "collMod": "employees",
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "required": [ "name" ],
+          "properties": {
+            "name": { "bsonType": "string" }
+          }
+        }
+      }
+    })
+
+Testing the schema.
+
+    db.employees.insertOne({})
+
+    {
+      failingDocumentId: ObjectId("630271dfe1eb13a727ac96ef"),
+      details: {
+        operatorName: '$jsonSchema',
+        schemaRulesNotSatisfied: [
+          {
+            operatorName: 'required',
+            specifiedAs: { required: [ 'name' ] },
+            missingProperties: [ 'name' ]
+          }
+        ]
+      }
+    }
+
 Transactions
 ---
 Requires a replica set.
